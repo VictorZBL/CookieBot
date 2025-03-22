@@ -1,0 +1,33 @@
+# Морщинники
+    morshinnik1 = {"top": 80, "left": 200, "width": 160, "height": 190}
+    # ^^^^^^ Центр сверху ^^^^^^ 
+    morshinnik2 = {"top": 120, "left": 80, "width": 160, "height": 170} 
+    morshinnik3 = {"top": 200, "left": 0, "width": 160, "height": 170} 
+    morshinnik4 = {"top": 330, "left": 0, "width": 160, "height": 170} 
+    morshinnik5 = {"top": 450, "left": 0, "width": 160, "height": 180} 
+    morshinnik6 = {"top": 550, "left": 80, "width": 160, "height": 170}
+
+    morshinnik7 = {"top": 580, "left": 200, "width": 160, "height": 190}
+    # ^^^^^^ Центр снизу ^^^^^^ 
+    morshinnik8 = {"top": 550, "left": 320, "width": 160, "height": 190}
+    morshinnik9 = {"top": 450, "left": 420, "width": 160, "height": 190}
+    morshinnik10 = {"top": 330, "left": 420, "width": 160, "height": 190}
+    morshinnik11 = {"top": 200, "left": 420, "width": 160, "height": 190}
+    morshinnik12 = {"top": 120, "left": 330, "width": 160, "height": 190}
+
+	# Морщинники
+    morshinnik1 = (slice(80,270),slice(200,360))
+    # ^^^^^^ Центр сверху ^^^^^^ 
+    morshinnik2 = (slice(120,290),slice(80,240)) 
+    morshinnik3 = (slice(200,370),slice(0,160)) 
+    morshinnik4 = (slice(330,500),slice(0,160)) 
+    morshinnik5 = (slice(450,630),slice(0,160)) 
+    morshinnik6 = (slice(550,720),slice(80,240)) 
+
+    morshinnik7 = (slice(580,770),slice(200,360)) 
+    # ^^^^^^ Центр снизу ^^^^^^ 
+    morshinnik8 = (slice(550,740),slice(320,480)) 
+    morshinnik9 = (slice(450,670),slice(420,580)) 
+    morshinnik10 = (slice(330,520),slice(420,580)) 
+    morshinnik11 = (slice(200,390),slice(420,580)) 
+    morshinnik12 = (slice(120,310),slice(420,580))
