@@ -11,12 +11,21 @@ import sys
 from pynput import keyboard
 
 running = True
+sct = mss.mss()
+# Область с печенькой по коордам
+cookie_top = 30
+cookie_left = 0
+cookie_width = 575
+cookie_height = 825
+# Область с печенькой    
+mon = {"top": cookie_top, "left": cookie_left, 
+        "width": cookie_width, "height": cookie_height}
 
 def on_press(key):
     global running
     try:
-        if key.char == 'q': 
-            print("Клавиша 'q' нажата. Останавливаю скрипт...")
+        if key == keyboard.Key.esc: 
+            print("Клавиша нажата. Останавливаю скрипт...")
             running = False
             return False 
     except AttributeError:
@@ -30,6 +39,7 @@ def click():
 
 def c_vision(img, morshinnik):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    # morshinnik = morshinnik / 0.25
     center_morshinnik = [(morshinnik[0].start+morshinnik[0].stop)/2, 
                          (morshinnik[1].start+morshinnik[1].stop)/2]
 
@@ -38,24 +48,48 @@ def c_vision(img, morshinnik):
 
     mask = cv2.inRange(hsv, lower_red, upper_red)
 
-    # cv2.imshow('Image', img[morshinnik])
+    cv2.imshow('Image', img[morshinnik])
     # cv2.imshow('Mask', mask)
     # print(center_morshinnik[0],center_morshinnik[1])
     # print(np.sum(mask[morshinnik]))
+
     if np.sum(mask[morshinnik]) >= 1000000:
         pyautogui.moveTo(center_morshinnik[1],center_morshinnik[0], 0.01)
-        click()
-        click()
-        click()
+        # click()
+        # click()
+        # click()
+
+def get_morshinnik_coords():
+
+    img = np.asarray(sct.grab(mon))
+    
+    img_height, img_weight = img.shape[:2]
+
+    center_x = img_weight // 2                  # 287
+    center_y = (cookie_height-cookie_top) // 2  # 397
+
+    # Морщинники
+    # формат: [y_stars:y_end, x_start:x_end]
+    morshinnik1 = (slice(80,270),slice(200,360))
+    # morshinnik1 = (slice(0,center_y - int(center_y//2.7)),
+    #                slice(center_x - int(center_x//4),center_x + center_x//4))
+
+    cv2.line(img, (center_x, 0), (center_x, cookie_height), (0, 255, 0), 2)
+    cv2.line(img, (0, center_y), (img_weight, center_y), (0, 255, 0), 2)
+    
+    cv2.imshow('Image', img)
+    # cv2.imshow('Image', img)
+
+    # print(center_x, center_y)
 
 def get_screenshot():
-    # Область с печенькой
-    mon = {"top": 0, "left": 0, "width": 600, "height": 900}
-
     # Морщинники
     morshinnik1 = (slice(80,270),slice(200,360))
     # ^^^^^^ Центр сверху ^^^^^^ 
-    morshinnik2 = (slice(120,290),slice(80,240)) 
+    morshinnik2 = (slice((int)(110*1.25),
+                         (int)(280*1)),
+                    slice((int)(80*1.25),
+                               (int)(240*1))) 
     morshinnik3 = (slice(200,370),slice(0,160)) 
     morshinnik4 = (slice(330,500),slice(0,160)) 
     morshinnik5 = (slice(450,630),slice(0,160)) 
@@ -69,20 +103,17 @@ def get_screenshot():
     morshinnik11 = (slice(200,390),slice(420,580)) 
     morshinnik12 = (slice(120,310),slice(330,490)) 
 
-    fps = 0
-    sct = mss.mss()
-
-    while True:
+    # morshinnik2 = (slice(110,280),slice(80,240))
+    while running:
         img = np.asarray(sct.grab(mon))
-        fps += 1
 
-        c_vision(img, morshinnik11)
-        
+        # c_vision(img, morshinnik2) 
+
+        get_morshinnik_coords()
+
         if cv2.waitKey(25) & 0xFF == ord("q"):
             cv2.destroyAllWindows()
             break
-
-    return fps
     
 def get_screenshot_bad():
     # Область с печенькой
@@ -91,7 +122,7 @@ def get_screenshot_bad():
     # Морщинники
     morshinnik1 = (slice(80,270),slice(200,360))
     # ^^^^^^ Центр сверху ^^^^^^ 
-    morshinnik2 = (slice(120,290),slice(80,240)) 
+    morshinnik2 = (slice(110,280),slice(80,240))
     morshinnik3 = (slice(200,370),slice(0,160)) 
     morshinnik4 = (slice(330,500),slice(0,160)) 
     morshinnik5 = (slice(450,630),slice(0,160)) 
@@ -110,7 +141,6 @@ def get_screenshot_bad():
                         morshinnik7,morshinnik8,morshinnik9,
                         morshinnik10,morshinnik11,morshinnik12,]
 
-    fps = 0
     sct = mss.mss()
 
     while running:
@@ -118,14 +148,9 @@ def get_screenshot_bad():
         while index_of_morshinnik < len(morshinnik_array):
             # print(index_of_morshinnik)
             img = np.asarray(sct.grab(mon))
-            fps += 1
 
             c_vision(img, morshinnik_array[index_of_morshinnik])
             index_of_morshinnik += 1
-
-# print("mss: ", get_screenshot())
-
-# print("mss: ", get_screenshot_bad())
 
 def main():
     print("Пуск")

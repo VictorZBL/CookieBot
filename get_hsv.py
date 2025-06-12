@@ -6,7 +6,7 @@ def nothing(x):
     pass
 
 # Загрузка изображения
-img = cv2.imread('C:/Users/Zayebalo/Desktop/CookieBot/scr.png')
+img = cv2.imread('C:/Users/Zayebalo/Desktop/CookieBot/test/scr2.png')
 if img is None:
     print("Ошибка: файл не найден или не может быть прочитан.")
     exit()
