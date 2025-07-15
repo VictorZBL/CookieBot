@@ -12,10 +12,10 @@ sct = mss.mss()
 running = True 
 morchinik_count = 0
 ## Дай бог угадал с коордами
-cookie_top = 110
+cookie_top = 115
 cookie_left = 0
 cookie_width = 575
-cookie_height = 640
+cookie_height = 630
 # Функция обработки нажатия esc, которая прерывает выполнение 
 def on_press(key):
     global running
@@ -37,36 +37,46 @@ def click():
     time.sleep(0.01)
     pyautogui.mouseUp()
 
-def click_at_morchinik(check_massive, mask, img):
+def click_at_morchinik(check_massive, check_massive_screen, mask, img):
     for i in range (0, len(check_massive)):
-        center_of_check_box = [(check_massive[i][0].start + check_massive[i][0].stop) / 2, 
-                                    (check_massive[i][1].start + check_massive[i][1].stop) / 2]
-        if cv2.countNonZero(mask[check_massive[i][1].start - cookie_top:
-                            check_massive[i][1].stop - cookie_top, 
-                            check_massive[i][0]]) > 1100:
-            pyautogui.moveTo(center_of_check_box[0], center_of_check_box[1], 0.01)
-            click()
-            click()
-            click()
-            morchinik_count_add(1)
+        center_of_check_box = [(check_massive_screen[i][0].start + check_massive_screen[i][0].stop) / 2, 
+                                    (check_massive_screen[i][1].start + check_massive_screen[i][1].stop) / 2]
+        # if cv2.countNonZero(mask[check_massive[i][1], check_massive[i][0]]) > 1100:
+            # pyautogui.moveTo(center_of_check_box[0], center_of_check_box[1], 0.25)
+            # click()
+            # click()
+            # click()
+            # morchinik_count_add(1)
+
 
 def set_check_blocks(img):
     h, w = img.shape[:2]
-    n = int(cookie_height*0.129)
-    m = int(cookie_height*0.143)
+    
+    n = int(w * 0.146)
+    m = int(h * 0.143)
     check_massive = []
-    # Разметка для удобства
-    for x in range(0, w - n, n):
+    for x in range(0, w, n):
         for y in range(0, h, m):
             check_massive.append((slice(x, x + n), slice(y, y + m)))
         y = 0
 
-    return check_massive 
+    h, w = cookie_height, cookie_width
+    n = int(cookie_width*0.146)
+    m = int(cookie_height*0.143)
+    check_massive_screen = []
+    for x in range(0, w, n):
+        for y in range(cookie_top, h+m, m):
+            check_massive_screen.append((slice(x, x + n), slice(y, y + m)))
+        y = 0
+    return check_massive, check_massive_screen
 
 def test_show(img):
     h, w = img.shape[:2]
-    n = int(cookie_height*0.129)
-    m = int(cookie_height*0.143)
+    n = int(cookie_width * 0.146)
+    m = int(cookie_height * 0.143)
+
+    n = int(w * 0.146)
+    m = int(h * 0.143)
     # Разметка для удобства
     for y in range(0, h, m):
         cv2.line(img, (0, y), (w, y), (0, 255, 0), 1)  
@@ -91,10 +101,11 @@ def c_vision(img):
 
 def get_screenshot(mon):
     img = np.asarray(sct.grab(mon))
-    check_massive = set_check_blocks(img)
+    check_massive, check_massive_screen = set_check_blocks(img)
+    print(len(check_massive), len(check_massive_screen))
     while running:
         mask = c_vision(img)         
-        click_at_morchinik(check_massive, mask, img)
+        click_at_morchinik(check_massive, check_massive_screen, mask, img)
         img = np.asarray(sct.grab(mon))
 
         if cv2.waitKey(25) & 0xFF == ord("q"):
