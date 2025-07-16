@@ -1,1 +1,1 @@
-python C:\Users\Egor\Desktop\CookieBot\wrinkler.py
+python ...\CookieBot\wrinkler.py
