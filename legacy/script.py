@@ -85,6 +85,17 @@ def get_morshinnik_coords():
 def get_screenshot():
     # Морщинники
     morshinnik1 = (slice(80,270),slice(200,360))
+
+    cv2.line(img, (center_x, 0), (center_x, cookie_height), (0, 255, 0), 2)
+    cv2.line(img, (0, center_y), (img_weight, center_y), (0, 255, 0), 2)
+    
+    cv2.imshow('Image', img)
+
+    print(center_x, center_y)
+
+def get_screenshot():
+    # Морщинники
+    morshinnik1 = (slice(80,270),slice(200,360))
     # ^^^^^^ Центр сверху ^^^^^^ 
     morshinnik2 = (slice((int)(110*1.25),
                          (int)(280*1)),
@@ -157,7 +168,7 @@ def main():
 
     listener = keyboard.Listener(on_press=on_press)
     listener.start()
-    get_screenshot_bad()
+    get_screenshot()
 
     print("Смерть")
     sys.exit(0)
